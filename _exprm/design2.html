@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang=cmn-Hans>
+<head>
+  <meta charset=UTF-8>
+  <meta http-equiv=X-UA-Compatible content="IE=edge">
+  <meta name=viewport content="width=device-width, initial-scale=1.0">
+  <meta name=robots content="noindex">
+  <meta name=format-detection content="telephone=no">
+  <title>随机小马图++</title>
+  <link rel=stylesheet
+    href="https://dgck81lnn.github.io/bootstrap-lnn/dist/bootstrap-lnn.min.css"
+    crossorigin=anonymous
+  >
+  <style>
+    .result {
+      margin-top: 0.75rem;
+    }
+    .result>img {
+      transition: opacity 0.5s, filter 0.5s;
+    }
+    .result-spoilered {
+      position: relative;
+      overflow: hidden;
+    }
+    .result-spoilered>img { /* fallback */
+      opacity: 0;
+      visibility: hidden;
+    }
+    @supports (filter: blur(15px)) {
+      .result-spoilered>img {
+        opacity: 0.5;
+        visibility: visible;
+        filter: blur(15px);
+      }
+    }
+    .result-spoilered-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .result-spoilered-warning {
+      text-align: center;
+    }
+    .tag {
+      background-color: gray;
+      color: #f8f9fa;
+    }
+    .tag-suggestive    { background-color: #a785ec; }
+    .tag-questionable  { background-color: #2a2f95; }
+    .tag-explicit      { background-color: #f73406; }
+    .tag-semi-grimdark { background-color: #2d7441; }
+    .tag-grimdark      { background-color: #157359; }
+    .tag-grotesque     { background-color: #810401; }
+  </style>
+</head>
+<body>
+  <div class="visually-hidden-focusable position-absolute top-0 start-0 p-1 bg-light">
+    <a href="#main">跳至正文</a>
+  </div>
+
+  <header class="d-flex justify-content-center py-3 mb-4 border-bottom shadow-sm bg-light">
+    <span>随机小马图++</span>
+  </header>
+
+  <main id=main class="px-2 mx-auto" style="max-width: 576px">
+    <h2>浏览</h2>
+    <article class="card result" id=result-0>
+      <img class="card-img-top" src="https://derpicdn.net/img/2021/10/12/2722898/medium.jpg">
+    </article>
+    <article class="card result result-spoilered" id=result-1>
+      <img aria-hidden=true class="card-img-top" src="https://derpicdn.net/img/2014/12/15/785691/medium.png">
+      <div class="result-spoilered-overlay">
+        <div class="result-spoilered-warning">
+          <p>
+            此图片被标记为：
+            <span
+              class="badge tag tag-suggestive"
+              data-bs-toggle=tooltip
+              data-bs-html=true
+              title="<span lang=en>suggestive</span>"
+            >性暗示</span>
+          </p>
+          <div>
+            <button class="btn btn-warning" onclick="dismissWarning(1)">显示</button>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article class="card result result-spoilered" id=result-2>
+      <img aria-hidden=true class="card-img-top" src="https://derpicdn.net/img/2015/7/1/927788/medium.png">
+      <div class="result-spoilered-overlay">
+        <div class="result-spoilered-warning">
+          <p>
+            此图片被标记为：
+            <span
+              class="badge tag tag-semi-grimdark"
+              data-bs-toggle=tooltip
+              data-bs-html=true
+              title="<span lang=en>semi-grimdark</span>"
+            >轻度黑暗</span>
+          </p>
+          <div>
+            <button class="btn btn-warning" onclick="dismissWarning(2)">显示</button>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article class="card result result-spoilered" id=result-3>
+      <img aria-hidden=true class="card-img-top" src="https://derpicdn.net/img/2018/6/23/1764285/medium.png">
+      <div class="result-spoilered-overlay">
+        <div class="result-spoilered-warning">
+          <p>
+            此图片被标记为：
+            <span
+              class="badge tag tag-suggestive"
+              data-bs-toggle=tooltip
+              data-bs-html=true
+              title="<span lang=en>suggestive</span>"
+            >性暗示</span>
+            <span
+              class="badge tag tag-grimdark"
+              data-bs-toggle=tooltip
+              data-bs-html=true
+              title="<span lang=en>grimdark</span>"
+            >黑暗</span>
+            <span
+              class="badge tag tag-grotesque"
+              data-bs-toggle=tooltip
+              data-bs-html=true
+              title="<span lang=en>grotesque</span>"
+            >血腥/恶心</span>
+          </p>
+          <div>
+            <button class="btn btn-warning" onclick="dismissWarning(3)">显示</button>
+          </div>
+        </div>
+      </div>
+    </article>
+    <hr>
+    <form>
+      <div class="mb-4">
+      <a role=button
+        data-bs-toggle=modal
+        href=#search-rating
+      >内容分级...</a>
+      </div>
+  <div
+    class="modal fade"
+    id=search-rating
+    aria-hidden=true
+    aria-labelledby=search-rating-title
+    tabindex=-1
+  >
+    <div class="modal-dialog">
+      <fieldset class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id=search-rating-title>内容分级</h5>
+          <button type=button
+            class="btn-close"
+            data-bs-dismiss=modal
+            aria-label="关闭"
+          ></button>
+        </div>
+        <div class="modal-body">
+        <fieldset>
+          <legend class="col-form-label">色情内容</legend>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=r34 value=n id=search-r34-none>
+            <label class="form-check-label" for=search-r34-none>全部隐藏</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio checked class="form-check-input" name=r34 value=s id=search-r34-suggestive>
+            <label class="form-check-label" for=search-r34-suggestive>允许性暗示</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=r34 value=q id=search-r34-questionable>
+            <label class="form-check-label" for=search-r34-questionable>允许强烈性暗示</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=r34 value=e id=search-r34-explicit>
+            <label class="form-check-label" for=search-r34-explicit>全部显示</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="col-form-label">黑暗内容</legend>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=dark value=n id=search-dark-none>
+            <label class="form-check-label" for=search-dark-none>全部隐藏</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=dark value=s id=search-dark-semi>
+            <label class="form-check-label" for=search-dark-semi>允许轻度黑暗</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio checked class="form-check-input" name=dark value=a id=search-dark-all>
+            <label class="form-check-label" for=search-dark-all>全部显示</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="col-form-label">血腥/恶心内容</legend>
+          <div class="form-check form-check-inline">
+            <input type=radio class="form-check-input" name=grotesq value=n id=search-grotesq-no>
+            <label class="form-check-label" for=search-grotesq-no>隐藏</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input type=radio checked class="form-check-input" name=grotesq value=y id=search-grotesq-yes>
+            <label class="form-check-label" for=search-grotesq-yes>显示</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+      <button type=button
+        class="btn btn-primary"
+        data-bs-toggle=modal
+        data-bs-target=#search-rating
+      >完成</button>
+      </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+      <div class="d-flex">
+        <button class="btn btn-primary flex-fill">换一组</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="mt-4 px-2 py-4 bg-light border-top">
+  <div class="mx-auto" style="max-width: 768px">
+    <div class="d-flex flex-wrap justify-content-evenly mb-2">
+    <div>本程序作者 DGCK81LNN</div>
+    <div>所有图画来自 <a href="https://derpibooru.org" rel=nofollow>Derpibooru</a></div>
+    </div>
+    <div class="alert alert-warning">
+      <span class="visually-hidden">警告：</span
+      >本程序仅供内部使用，严禁大范围传播！
+    </div>
+  </div>
+  </footer>
+
+  <script>
+    setTimeout(function () {
+      Array.prototype.forEach.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'), function (el) {
+        new bootstrap.Tooltip(el);
+      });
+    }, 0);
+    function dismissWarning(index) {
+      var articleEl = document.getElementById("result-" + index);
+      articleEl.classList.remove("result-spoilered");
+      var overlayEl = articleEl.querySelector(".result-spoilered-overlay");
+      if (overlayEl) overlayEl.hidden = true;
+      articleEl.querySelector("img").removeAttribute("aria-hidden");
+    }
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+    crossorigin=anonymous
+  ></script>
+</body>
+</html>

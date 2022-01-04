@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang=cmn-Hans>
+<head>
+  <meta charset=UTF-8>
+  <meta http-equiv=X-UA-Compatible content="IE=edge">
+  <meta name=viewport content="width=device-width, initial-scale=1.0">
+  <meta name=robots content="noindex">
+  <meta name=format-detection content="telephone=no">
+  <title>随机小马图++</title>
+  <link rel=canonical href="http://dgck81lnn.pony.icu/derpi/">
+  <link rel=stylesheet
+    href="https://dgck81lnn.github.io/bootstrap-lnn/dist/bootstrap-lnn.min.css"
+    crossorigin=anonymous
+  >
+  <link rel=stylesheet href="style.css">
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+    crossorigin=anonymous
+  ></script>
+  <script defer src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.11.0/vconsole.min.js"></script>
+  <script defer src="meta.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="visually-hidden-focusable position-absolute top-0 start-0 p-1 bg-light">
+    <a href="#main">跳至正文</a>
+  </div>
+
+  <header class="d-flex justify-content-center py-3 mb-4 border-bottom shadow-sm bg-light">
+    <span>随机小马图++</span>
+  </header>
+
+  <main id=main class="px-2 mx-auto">
+    <div id=bootstrap-failed-warning class="alert alert-danger" hidden role=alert>
+      <h4 class="alert-heading"><span class=visually-hidden>【错误】</span
+        >脚本加载出现问题，本页面将无法使用</h4>
+      <p class=mb-0>您可以刷新页面重试，注意不要用太老旧的浏览器。</p>
+    </div>
+
+    <section id=intro>
+      <figure class=figure>
+        <img class="figure-img img-fluid border rounded"
+             src="https://derpicdn.net/img/2021/10/12/2722898/medium.jpg"
+             width=1779 height=1798>
+        <figcaption class="figure-caption d-flex flex-wrap justify-content-between">
+          <div><cite lang=en>Twilight</cite>（画师：Saphirapone）</div>
+          <div>
+            <a rel=nofollow href="https://www.deviantart.com/saphypone/art/Twilight-894698692">原网页</a> |
+            <a rel=nofollow href="https://derpibooru.org/images/2722898">Derpibooru</a>
+          </div>
+        </figcaption>
+      </figure>
+      <hr>
+    </section>
+
+    <section id=browse hidden>
+      <h2>浏览</h2>
+      <div id=browse-images></div>
+      <hr>
+    </section>
+
+    <section id=search>
+      <form>
+        <div class=mb-3>
+          <input name=tags class=form-control placeholder=tags value=ts>
+        </div>
+        <div class=mb-4>
+          <a role=button data-bs-toggle=modal href=#search-rating>内容分级...</a>
+        </div>
+        <div class=d-flex>
+          <button id=search-submit class="btn btn-primary flex-fill">随机小马图！</button>
+        </div>
+
+        <div id=search-rating class="modal fade" aria-hidden=true
+             aria-labelledby=search-rating-title tabindex=-1>
+          <div class=modal-dialog>
+            <fieldset class=modal-content>
+              <div class=modal-header>
+                <h5 class=modal-title id=search-rating-title>内容分级</h5>
+                <button type=button class=btn-close data-bs-dismiss=modal aria-label="关闭"></button>
+              </div>
+              <div class=modal-body>
+                <fieldset id=search-r34>
+                  <legend class="col-form-label">色情内容</legend>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-r34-none class=form-check-input name=r34 value=n checked>
+                    <label class=form-check-label for=search-r34-none>全部隐藏</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-r34-suggestive class=form-check-input name=r34 value=s>
+                    <label class=form-check-label for=search-r34-suggestive>允许性暗示</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-r34-questionable class=form-check-input name=r34 value=q>
+                    <label class=form-check-label for=search-r34-questionable>允许强烈性暗示</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-r34-explicit class=form-check-input name=r34 value=e>
+                    <label class=form-check-label for=search-r34-explicit>全部显示</label>
+                  </div>
+                </fieldset>
+                <fieldset id=search-dark>
+                  <legend class=col-form-label>黑暗内容</legend>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-dark-none class=form-check-input name=dark value=n checked>
+                    <label class=form-check-label for=search-dark-none>全部隐藏</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-dark-semi class=form-check-input name=dark value=s>
+                    <label class=form-check-label for=search-dark-semi>允许轻度黑暗</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-dark-all class=form-check-input name=dark value=a>
+                    <label class=form-check-label for=search-dark-all>全部显示</label>
+                  </div>
+                </fieldset>
+                <fieldset id=search-grotesq>
+                  <legend class=col-form-label>血腥/恶心内容</legend>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-grotesq-no class=form-check-input name=grotesq value=n checked>
+                    <label class=form-check-label for=search-grotesq-no>隐藏</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type=radio id=search-grotesq-yes class=form-check-input name=grotesq value=y>
+                    <label class=form-check-label for=search-grotesq-yes>显示</label>
+                  </div>
+                </fieldset>
+              </div>
+              <div class=modal-footer>
+                <button type=button class="btn btn-primary"
+                        data-bs-toggle=modal data-bs-target=#search-rating>完成</button>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="mt-4 px-2 py-4 bg-light border-top">
+    <div class=mx-auto style="max-width: 768px">
+      <div class="d-flex flex-wrap justify-content-evenly" style="column-gap: 1rem">
+        <p>本程序作者 DGCK81LNN</p>
+        <p>所有图画来自 <a href="https://derpibooru.org" rel=nofollow>Derpibooru</a></p>
+      </div>
+      <p lang=en class=text-center>hosted by ponyicu</p>
+      <section class="alert alert-warning">
+        <span class=visually-hidden>【警告】</span
+        >本程序仅供内部使用，严禁大范围传播！
+      </section>
+    </div>
+  </footer>
+
+  <template id=result-template>
+    <article class="card result">
+      <img class=card-img-top>
+    </article>
+  </template>
+  <template id=loading-template>
+    <div class=text-center>
+      <div class=spinner-border role=status>
+        <span class=visually-hidden>加载中...</span>
+      </div>
+    </div>
+  </template>
+</body>
+</html>

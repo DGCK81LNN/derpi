@@ -12,32 +12,42 @@ function dismissWarning(index) {
   articleEl.querySelector("img").removeAttribute("aria-hidden")
 }
 
-$$$("search-submit").addEventListener("click", function (event) {
+$$$("search-submit").addEventListener("click", async function (event) {
   event.preventDefault()
   var data = new FormData(this.form)
   var query = "?" + [...data].map(e => e.map(s => encodeURIComponent(s)).join("=")).join("&")
   try{
-  search(query)
+    await search(query)
   }catch(e){alert(e)}
 })
 
 /** @param {string} query */
-function search(query) {
+async function search(query) {
   $$$("intro").hidden = true
   $$$("browse").hidden = false
   var containerEl = $$$("browse-images")
   var templateEl = $$$("result-template").content
-  containerEl.textContent = ""
-  containerEl.appendChild($$$("loading-template").content.cloneNode(true))
+  document.body.scrollIntoView()
+  containerEl.classList.add("loading")
+  containerEl.setAttribute("aria-hidden", "true")
+  // containerEl.textContent = ""
+  // containerEl.appendChild($$$("loading-template").content.cloneNode(true))
 
   var xhr = new XMLHttpRequest()
-  xhr.open("get", "api.php" + query, false)
-  xhr.send()
+  xhr.open("get", "api.php" + query)
+  await new Promise((res, rej) => {
+    xhr.onload = () => res()
+    xhr.onerror = ev => rej(ev.error || ev.message)
+    xhr.send()
+  })
+
+  containerEl.classList.remove("loading")
+  containerEl.removeAttribute("aria-hidden")
   containerEl.textContent = ""
   var response = JSON.parse(xhr.responseText)
-  for (let image of response.images) {
-    var imageEl = templateEl.cloneNode(true)
-    imageEl.firstElementChild.firstElementChild.src = image.representations["medium"]
+  for (let result of response.images) {
+    var resultEl = templateEl.cloneNode(true)
+    resultEl.firstElementChild.firstElementChild.src = result.representations["tall"]
     containerEl.appendChild(imageEl)
   }
 }

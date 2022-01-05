@@ -27,7 +27,7 @@ function filterFields(array $src, array $fields) {
 
 
 $passthruFields = [
-  'id', 'score', 'upvotes', 'downvotes', 'wilson_score',
+  'id', 'score', 'upvotes', 'downvotes', 'wilson_score', 'width', 'height',
   'format', 'animated', 'tags', 'spoilered', 'representations',
 ];
 

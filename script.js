@@ -21,6 +21,9 @@ $$$("search-submit").addEventListener("click", async function (event) {
   }catch(e){alert(e)}
 })
 
+// https://github.com/derpibooru/philomena/blob/cbbdaf677fef8fdd952e167fc91ff39a13b04c06/lib/philomena/images/thumbnailer.ex#L14-L23
+const IMG_SIZE_KEYWORD = "tall", IMG_MAX_WIDTH = 1024, IMG_MAX_HEIGHT = 4096
+
 /** @param {string} query */
 async function search(query) {
   $$$("intro").hidden = true
@@ -47,7 +50,26 @@ async function search(query) {
   var response = JSON.parse(xhr.responseText)
   for (let result of response.images) {
     var resultEl = templateEl.cloneNode(true)
-    resultEl.firstElementChild.firstElementChild.src = result.representations["tall"]
-    containerEl.appendChild(imageEl)
+
+    var { width, height } = result
+    if (width >= height) {
+      if (width > IMG_MAX_WIDTH) {
+        height *= IMG_MAX_WIDTH / width
+        height = Math.round(height)
+        width = IMG_MAX_WIDTH
+      }
+    } else {
+      if (height > IMG_MAX_HEIGHT) {
+        width *= IMG_MAX_HEIGHT / height
+        width = Math.round(width)
+        height = IMG_MAX_HEIGHT
+      }
+    }
+
+    var img = resultEl.firstElementChild.firstElementChild
+    img.width = width, img.height = height
+    img.src = result.representations[IMG_SIZE_KEYWORD]
+
+    containerEl.appendChild(resultEl)
   }
 }

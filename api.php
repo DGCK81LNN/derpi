@@ -52,7 +52,7 @@ else {
   $dark    = charPos($_GET['dark'] ?? '',    'nsa',  0);
   $grotesq = charPos($_GET['grotesq'] ?? '', 'ny',   0);
 
-  $query = [];
+  $query = [ 'wilson_score.gte:0.93' ];
   if ($tags) $query[] = $tags;
 
   if ($r34 === 0 && $r34 === 0 && $r34 === 0) $query[] = 'safe';

@@ -1,7 +1,11 @@
 <?php
-error_reporting(E_ALL);
-
 define('APP_ROOT', __DIR__);
+
+if ($_COOKIE['lnndebug']) {
+  error_reporting(E_ALL);
+  ini_set('log_errors', '1');
+  ini_set('error_log', APP_ROOT . '/debug.log');
+}
 
 require_once(APP_ROOT . '/include/derpi.php');
 

@@ -157,10 +157,33 @@
       <img class=card-img-top>
     </article>
   </template>
+
+  <template id=result-spoiler-template>
+    <div class=result-spoilered-overlay>
+      <div class=result-spoilered-warning>
+        <p class=result-spoilered-message>
+          此图片被标记为：
+        </p>
+        <div>
+          <button class="result-spoilered-button btn btn-warning">显示</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id=tag-template>
+    <span class="tag badge text-dark bg-light border">
+      <ruby>
+        <rb class=tag-transl>未知标签</rb>
+        <rp>(<rt class=tag-name>unknown tag<rp>)
+      </ruby>
+    </span>
+  </template>
+
   <template id=loading-template>
     <div class=text-center>
       <div class=spinner-border role=status>
-        <span class=visually-hidden>加载中...</span>
+        <span class=visually-hidden>加载中…</span>
       </div>
     </div>
   </template>

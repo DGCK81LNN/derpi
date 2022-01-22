@@ -4,9 +4,14 @@ main { max-width: 576px; }
 #browse-images.loading { opacity: 50%; }
 
 .result { margin-top: 0.75rem; }
-.result>img { transition: opacity 0.5s, filter 0.5s; }
+
+.result>img {
+  transition: opacity 0.5s, filter 0.5s;
+  height: auto;
+}
 
 .result-spoilered { position: relative; overflow: hidden; }
+
 .result-spoilered>img { opacity: 0; visibility: hidden; }
 @supports (filter: blur(15px)) {
   .result-spoilered>img {
@@ -15,6 +20,7 @@ main { max-width: 576px; }
     filter: blur(15px);
   }
 }
+
 .result-spoilered-overlay {
   position: absolute;
   top: 0; right: 0;
@@ -23,8 +29,10 @@ main { max-width: 576px; }
   justify-content: center;
   align-items: center;
 }
+
 .result-spoilered-warning { text-align: center; }
 
+/*
 .tag { background-color: gray; color: #f8f9fa; }
 .tag-suggestive    { background-color: #a785ec; }
 .tag-questionable  { background-color: #2a2f95; }
@@ -32,3 +40,5 @@ main { max-width: 576px; }
 .tag-semi-grimdark { background-color: #2d7441; }
 .tag-grimdark      { background-color: #157359; }
 .tag-grotesque     { background-color: #810401; }
+*/
+

@@ -55,7 +55,7 @@ else {
   $query = [ 'wilson_score.gte:0.93', '-original_format:webm' ];
   if ($tags) $query[] = $tags;
 
-  if ($r34 === 0 && $r34 === 0 && $r34 === 0) $query[] = 'safe';
+  if ($r34 === 0 && $dark === 0 && $grotesq === 0) $query[] = 'safe';
   else {
     switch ($r34) {
       case 0: $query[] = '-suggestive';

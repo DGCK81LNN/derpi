@@ -122,7 +122,7 @@ async function search(query) {
     let imgEl = resultEl.querySelector("img")
     imgEl.width = width
     imgEl.height = height
-    imgEl.src = result.representations[IMG_SIZE_KEYWORD]
+    let imgUrl = result.representations[IMG_SIZE_KEYWORD]
 
     if (result.spoilered) {
       resultEl.classList.add("result-spoilered")
@@ -140,16 +140,40 @@ async function search(query) {
         }
       })
 
+      /** @type {HTMLCanvasElement?} */
+      let canvasEl = null
+      if (result.tags.includes("animated")) {
+        canvasEl = document.createElement("canvas")
+        canvasEl.width = width
+        canvasEl.height = height
+        canvasEl.className = imgEl.className
+        canvasEl.role = "presentation"
+        let cxt = canvasEl.getContext("2d")
+        resultEl.prepend(canvasEl)
+        imgEl.classList.add("hide-img-hack")
+        imgEl.onload = () => {
+          if (!imgEl.currentSrc) return
+          imgEl.onload = null
+          cxt.drawImage(imgEl, 0, 0, width, height)
+        }
+      }
+
       let buttonEl = overlayEl.querySelector(".result-spoilered-button")
       once(buttonEl, "click", () => {
         resultEl.classList.remove("result-spoilered")
         overlayEl.hidden = true
+        setTimeout(() => {
+          overlayEl.remove()
+          if (canvasEl) canvasEl.remove()
+          imgEl.classList.remove("hide-img-hack")
+        }, 500)
         imgEl.ariaHidden = false
       })
 
       resultEl.append(overlayEl)
     }
 
+    imgEl.src = imgUrl
     containerEl.appendChild(resultEl)
   }
 }

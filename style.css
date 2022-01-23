@@ -5,16 +5,22 @@ main { max-width: 576px; }
 
 .result { margin-top: 0.75rem; }
 
-.result>img {
+.result>img,
+.result>canvas {
   transition: opacity 0.5s, filter 0.5s;
   height: auto;
 }
 
 .result-spoilered { position: relative; overflow: hidden; }
 
-.result-spoilered>img { opacity: 0; visibility: hidden; }
+.result-spoilered>img,
+.result-spoileres>canvas {
+opacity: 0;
+visibility: hidden;
+}
 @supports (filter: blur(15px)) {
-  .result-spoilered>img {
+  .result-spoilered>img,
+  .result-spoilered>canvas{
     opacity: 0.5;
     visibility: visible;
     filter: blur(15px);
@@ -31,6 +37,8 @@ main { max-width: 576px; }
 }
 
 .result-spoilered-warning { text-align: center; }
+
+.hide-img-hack { height: 0 !important; }
 
 /*
 .tag { background-color: gray; color: #f8f9fa; }

@@ -17,6 +17,22 @@ function cloneTemplate(id) {
   return $$$(id + "-template").content.cloneNode(true).firstElementChild
 }
 
+/**
+ * Handle an event only once.
+ *
+ * @param {EventTarget} target
+ * @param {string} name
+ * @param {((event: Event) => any)} handler
+ * @param {boolean | { capture: boolean }} [options=]
+ */
+function once(target, name, handler, options) {
+  var f = function (event) {
+    target.removeEventListener(name, f, options)
+    handler.call(this, event)
+  }
+  target.addEventListener(name, f, options)
+}
+
 $$$("search-submit").addEventListener("click", async function (event) {
   event.preventDefault()
   var data = [...new FormData(this.form)]
@@ -75,8 +91,8 @@ async function search(query) {
   var xhr = new XMLHttpRequest()
   xhr.open("get", "api.php" + query)
   await new Promise((res, rej) => {
-    xhr.onload = () => res()
-    xhr.onerror = ev => rej(ev.error || ev.message)
+    once(xhr, "load", () => res())
+    once(xhr, "error", ev => rej(ev.error || ev.message))
     xhr.send()
   })
 
@@ -125,7 +141,7 @@ async function search(query) {
       })
 
       let buttonEl = overlayEl.querySelector(".result-spoilered-button")
-      buttonEl.addEventListener("click", () => {
+      once(buttonEl, "click", () => {
         resultEl.classList.remove("result-spoilered")
         overlayEl.hidden = true
         imgEl.ariaHidden = false

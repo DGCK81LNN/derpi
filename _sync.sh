@@ -5,15 +5,20 @@ if [ $# -eq 0 -o "$1" == "--help" ]; then
 Usage: `basename $0` [file]... [--ls [directory]...]
 Sync files to server, and/or list files on server
 
-Set environment variable LNNDERPI_FTP_PASSWD to avoid having to enter password
-every time" >&2
+Password is read from stdin, if not specified via the LNNDERPI_FTP_PASSWD
+environment variable" >&2
   exit
 fi
 
 if [ "$LNNDERPI_FTP_PASSWD" ]; then
   password="$LNNDERPI_FTP_PASSWD"
 else
-  echo -en "\e[0;30;46m ***? \e[36;49m\e[m "
+  if [ -t 1 ]; then
+    echo "\
+Set environment variable LNNDERPI_FTP_PASSWD to avoid having to enter password
+every time" >&2
+    echo -en "\e[0;30;46m ***? \e[36;49m\e[m "
+  fi
   read -s password
   echo
   if [ ! "$password" ]; then
@@ -21,7 +26,7 @@ else
   fi
 fi
 
-if [ -t 1 ]; then # stdout is opened on a terminal
+if [ -t 1 ]; then
   echo -en "\e[?1049h\e[H"
 fi
 
@@ -60,7 +65,7 @@ echo "Invoking ftp..."
 ftp -v -n ftpupload.net <<< ${input/\$password/$password}
 
 echo
-if [ -t 1 ]; then # stdout is opened on a terminal
+if [ -t 1 ]; then
   read -e -p "Done, press Enter to return"
   echo -en "\e[?1049l"
 else

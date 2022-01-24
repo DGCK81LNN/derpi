@@ -12,6 +12,7 @@
     href="https://dgck81lnn.github.io/bootstrap-lnn/dist/bootstrap-lnn.min.css"
     crossorigin=anonymous
   >
+  <link rel=stylesheet href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
   <link rel=stylesheet href="style.css"><!--?_=-->
   <script defer
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
@@ -154,7 +155,14 @@
 
   <template id=result-template>
     <article class="card result">
-      <img class=card-img-top>
+      <div class=card-img-top>
+        <img class=w-100>
+      </div>
+      <div class=card-body hidden></div>
+      <div class="card-footer text-center text-info result-details-button" role=button tabindex=0>
+        详情
+        <i class=bi-arrow-bar-down aria-hidden></i>
+      </div>
     </article>
   </template>
 
@@ -169,6 +177,14 @@
         </div>
       </div>
     </div>
+  </template>
+
+  <template id=result-details-template>
+    <section class=card-body>
+      <div class="result-loadfull float-end">
+        <button class="btn btn-success result-loadfull-button">加载原图</button>
+      </div>
+    </section>
   </template>
 
   <template id=tag-template>
@@ -186,6 +202,12 @@
         <span class=visually-hidden>加载中…</span>
       </div>
     </div>
+  </template>
+
+  <template id=button-spinner-template>
+    <span role=status aria-hidden=true
+      class="spinner-border spinner-border-sm"
+    ></span>
   </template>
 </body>
 </html>

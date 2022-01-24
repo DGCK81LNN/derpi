@@ -149,8 +149,8 @@ async function search(query) {
         canvasEl.className = imgEl.className
         canvasEl.role = "presentation"
         let cxt = canvasEl.getContext("2d")
-        resultEl.prepend(canvasEl)
-        imgEl.classList.add("hide-img-hack")
+        imgEl.parentElement.prepend(canvasEl)
+        imgEl.classList.add("visually-hidden")
         imgEl.onload = () => {
           if (!imgEl.currentSrc) return
           imgEl.onload = null
@@ -165,13 +165,36 @@ async function search(query) {
         setTimeout(() => {
           overlayEl.remove()
           if (canvasEl) canvasEl.remove()
-          imgEl.classList.remove("hide-img-hack")
+          imgEl.classList.remove("visually-hidden")
         }, 500)
         imgEl.ariaHidden = false
       })
 
-      resultEl.append(overlayEl)
+      resultEl.querySelector(".card-img-top").append(overlayEl)
     }
+
+    let detailsBtnEl = resultEl.querySelector(".result-details-button")
+    once(detailsBtnEl, "click", () => {
+      let detailsEl = cloneTemplate("result-details")
+
+      let loadFullEl = detailsEl.querySelector(".result-loadfull"),
+        loadFullBtnEl = detailsEl.querySelector(".result-loadfull-button")
+      loadFullBtnEl.textContent += ` (${(result.size / 1000000).toFixed(1)}M)`
+      once(loadFullBtnEl, "click", event => {
+        let loadFullBtnEl = event.currentTarget
+        loadFullBtnEl.disabled = true
+        loadFullBtnEl.textContent = "加载原图…"
+        loadFullBtnEl.prepend(cloneTemplate("button-spinner"), " ")
+        imgEl.src = ""
+        once(imgEl, "load", () => {
+          loadFullEl.remove()
+          loadFullEl = loadFullBtnEl = null
+        })
+        imgEl.src = result.representations["full"]
+      })
+
+      resultEl.replaceChild(detailsEl, detailsBtnEl)
+    })
 
     imgEl.src = imgUrl
     containerEl.appendChild(resultEl)

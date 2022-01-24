@@ -184,7 +184,7 @@ async function search(query) {
         let loadFullBtnEl = event.currentTarget
         loadFullBtnEl.disabled = true
         loadFullBtnEl.textContent = "加载原图…"
-        loadFullBtnEl.prepend(cloneTemplate("button-spinner"), " ")
+        loadFullBtnEl.append(" ", cloneTemplate("button-spinner"))
         imgEl.src = ""
         once(imgEl, "load", () => {
           loadFullEl.remove()

@@ -214,7 +214,7 @@ async function search(query) {
           if (photographers.length) parens.push(`${photographers.join("、")} 拍摄`)
           if (editors.length) parens.push(`${editors.join("、")} 改图`)
           else if (result.tags.includes("edit")) parens.push("图有改动")
-          if (parens.length) artistsStr += `（${parens.join("，")}）`
+          if (parens.length) artistsStr += ` (${parens.join("，")})`
 
           detailsEl.querySelector(".result-details-artist").textContent = artistsStr
         }

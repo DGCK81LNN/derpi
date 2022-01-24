@@ -38,6 +38,13 @@ visibility: hidden;
 
 .result-spoilered-warning { text-align: center; }
 
+.result-loadfull {
+  float: right;
+  margin: -0.5rem -0.5rem 0.5rem 0.5rem;
+}
+
+.result-details-src small { font-size: 0.5rem }
+
 /*
 .tag { background-color: gray; color: #f8f9fa; }
 .tag-suggestive    { background-color: #a785ec; }

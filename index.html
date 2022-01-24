@@ -181,8 +181,20 @@
 
   <template id=result-details-template>
     <section class=card-body>
-      <div class="result-loadfull float-end">
-        <button class="result-loadfull-button btn btn-success">加载原图</button>
+      <div class=result-loadfull>
+        <button class="result-loadfull-button btn btn-success btn-sm">加载原图</button>
+      </div>
+      <dl class="d-flex mb-2">
+        <dt class="me-2 flex-shrink-0">画师</dt>
+        <dd class="result-details-artist mb-0"></dd>
+      </dl>
+      <div>
+        <a class=result-details-boorulink target=_blank>Derpibooru</a>
+        <span class=result-details-src>
+          <span class="vr mx-1"></span>
+          <a target=_blank>原网页</a>
+          <small class=text-muted>(example.com)</small>
+        </span>
       </div>
     </section>
   </template>

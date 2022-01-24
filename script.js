@@ -173,28 +173,71 @@ async function search(query) {
       resultEl.querySelector(".card-img-top").append(overlayEl)
     }
 
-    let detailsBtnEl = resultEl.querySelector(".result-details-button")
-    once(detailsBtnEl, "click", () => {
-      let detailsEl = cloneTemplate("result-details")
+    { // details
+      let detailsBtnEl = resultEl.querySelector(".result-details-button")
+      once(detailsBtnEl, "click", () => {
+        let detailsEl = cloneTemplate("result-details")
 
-      let loadFullEl = detailsEl.querySelector(".result-loadfull"),
-        loadFullBtnEl = detailsEl.querySelector(".result-loadfull-button")
-      loadFullBtnEl.textContent += ` (${(result.size / 1000000).toFixed(1)}M)`
-      once(loadFullBtnEl, "click", event => {
-        let loadFullBtnEl = event.currentTarget
-        loadFullBtnEl.disabled = true
-        loadFullBtnEl.textContent = "加载原图…"
-        loadFullBtnEl.append(" ", cloneTemplate("button-spinner"))
-        imgEl.src = ""
-        once(imgEl, "load", () => {
-          loadFullEl.remove()
-          loadFullEl = loadFullBtnEl = null
+        let loadFullEl = detailsEl.querySelector(".result-loadfull"),
+          loadFullBtnEl = detailsEl.querySelector(".result-loadfull-button")
+        loadFullBtnEl.textContent += ` (${(result.size / 1000000).toFixed(1)}M)`
+        once(loadFullBtnEl, "click", event => {
+          let loadFullBtnEl = event.currentTarget
+          loadFullBtnEl.disabled = true
+          loadFullBtnEl.textContent = "加载原图…"
+          loadFullBtnEl.append(" ", cloneTemplate("button-spinner"))
+          imgEl.src = ""
+          once(imgEl, "load", () => {
+            loadFullEl.remove()
+            loadFullEl = loadFullBtnEl = null
+          })
+          imgEl.src = result.representations["full"]
         })
-        imgEl.src = result.representations["full"]
-      })
 
-      resultEl.replaceChild(detailsEl, detailsBtnEl)
-    })
+        { // artist
+          let artists = [], editors = [], photographers = []
+          for (let tag of result.tags) {
+            if (tag === "artist needed")
+              artists.push("佚名")
+            else if (tag === "photographer needed")
+              photographers.push("佚名")
+            else if (tag.startsWith("artist:") && !tag.endsWith(" edits"))
+              artists.push(tag.slice(7))
+            else if (tag.startsWith("editor:"))
+              editors.push(tag.slice(7))
+            else if (tag.startsWith("photographer:"))
+              photographers.push(tag.slice(13))
+          }
+
+          let artistsStr = artists.join("、") || "–"
+          let parens = []
+          if (photographers.length) parens.push(`${photographers.join("、")} 拍摄`)
+          if (editors.length) parens.push(`${editors.join("、")} 改图`)
+          else if (result.tags.includes("edit")) parens.push("图有改动")
+          if (parens.length) artistsStr += `（${parens.join("，")}）`
+
+          detailsEl.querySelector(".result-details-artist").textContent = artistsStr
+        }
+
+        { // links
+          let booruLinkEl = detailsEl.querySelector(".result-details-boorulink"),
+            srcEl = detailsEl.querySelector(".result-details-src")
+          booruLinkEl.href = `https://derpibooru.org/images/${result.id}`
+
+          let host = ""
+          if (result.source_url)
+            host = new URL(result.source_url).hostname
+          if (host && host !== "derpibooru.org") {
+            srcEl.querySelector("a").href = result.source_url
+            srcEl.querySelector("small").textContent = `(${host})`
+          } else {
+            srcEl.remove()
+          }
+        }
+
+        resultEl.replaceChild(detailsEl, detailsBtnEl)
+      })
+    }
 
     imgEl.src = imgUrl
     containerEl.appendChild(resultEl)

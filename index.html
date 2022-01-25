@@ -63,77 +63,79 @@
 
     <section id=search>
       <form>
-        <div class=mb-3>
-          <input name=tags class=form-control placeholder=tags value=ts>
-        </div>
-        <div class=mb-4>
-          <a role=button data-bs-toggle=modal href=#search-rating>内容分级...</a>
-        </div>
-        <div class=d-flex>
-          <button id=search-submit class="btn btn-primary flex-fill">随机小马图！</button>
-        </div>
-
-        <div id=search-rating class="modal fade" aria-hidden=true
-             aria-labelledby=search-rating-title tabindex=-1>
-          <div class=modal-dialog>
-            <fieldset class=modal-content>
-              <div class=modal-header>
-                <h5 class=modal-title id=search-rating-title>内容分级</h5>
-                <button type=button class=btn-close data-bs-dismiss=modal aria-label="关闭"></button>
+        <ul class="nav nav-tabs" id=search-tabs role=tablist>
+          <li class=nav-item role=presentation>
+            <button type=button id=search-tab-foo class="nav-link active" role=tab
+              data-bs-toggle=tab data-bs-target=#search-foo
+              aria-controls=search-foo aria-selected=true
+            >搜索词</button>
+          </li>
+          <li class=nav-item role=presentation>
+            <button type=button id=search-tab-rating class=nav-link role=tab
+              data-bs-toggle=tab data-bs-target=#search-rating
+              aria-controls=search-rating
+            >分级</button>
+          </li>
+        </ul>
+        <div class="tab-content mb-3">
+          <div id=search-foo class="tab-pane fade p-2 show active"
+            role=tabpanel aria-labelledby=search-tab-foo
+          >
+            <input name=tags class=form-control placeholder=tags value=ts>
+          </div>
+          <div id=search-rating class="tab-pane fade p-2"
+            role=tabpanel aria-labelledby=search-tab-rating
+          >
+            <fieldset id=search-r34>
+              <legend class="col-form-label">色情内容</legend>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-r34-none class=form-check-input name=r34 value=n checked>
+                <label class=form-check-label for=search-r34-none>全部隐藏</label>
               </div>
-              <div class=modal-body>
-                <fieldset id=search-r34>
-                  <legend class="col-form-label">色情内容</legend>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-r34-none class=form-check-input name=r34 value=n checked>
-                    <label class=form-check-label for=search-r34-none>全部隐藏</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-r34-suggestive class=form-check-input name=r34 value=s>
-                    <label class=form-check-label for=search-r34-suggestive>允许性暗示</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-r34-questionable class=form-check-input name=r34 value=q>
-                    <label class=form-check-label for=search-r34-questionable>允许强烈性暗示</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-r34-explicit class=form-check-input name=r34 value=e>
-                    <label class=form-check-label for=search-r34-explicit>全部显示</label>
-                  </div>
-                </fieldset>
-                <fieldset id=search-dark>
-                  <legend class=col-form-label>黑暗内容</legend>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-dark-none class=form-check-input name=dark value=n checked>
-                    <label class=form-check-label for=search-dark-none>全部隐藏</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-dark-semi class=form-check-input name=dark value=s>
-                    <label class=form-check-label for=search-dark-semi>允许轻度黑暗</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-dark-all class=form-check-input name=dark value=a>
-                    <label class=form-check-label for=search-dark-all>全部显示</label>
-                  </div>
-                </fieldset>
-                <fieldset id=search-grotesq>
-                  <legend class=col-form-label>血腥/恶心内容</legend>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-grotesq-no class=form-check-input name=grotesq value=n checked>
-                    <label class=form-check-label for=search-grotesq-no>隐藏</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input type=radio id=search-grotesq-yes class=form-check-input name=grotesq value=y>
-                    <label class=form-check-label for=search-grotesq-yes>显示</label>
-                  </div>
-                </fieldset>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-r34-suggestive class=form-check-input name=r34 value=s>
+                <label class=form-check-label for=search-r34-suggestive>允许性暗示</label>
               </div>
-              <div class=modal-footer>
-                <button type=button class="btn btn-primary"
-                        data-bs-toggle=modal data-bs-target=#search-rating>完成</button>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-r34-questionable class=form-check-input name=r34 value=q>
+                <label class=form-check-label for=search-r34-questionable>允许强烈性暗示</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-r34-explicit class=form-check-input name=r34 value=e>
+                <label class=form-check-label for=search-r34-explicit>全部显示</label>
+              </div>
+            </fieldset>
+            <fieldset id=search-dark>
+              <legend class=col-form-label>黑暗内容</legend>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-dark-none class=form-check-input name=dark value=n checked>
+                <label class=form-check-label for=search-dark-none>全部隐藏</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-dark-semi class=form-check-input name=dark value=s>
+                <label class=form-check-label for=search-dark-semi>允许轻度黑暗</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-dark-all class=form-check-input name=dark value=a>
+                <label class=form-check-label for=search-dark-all>全部显示</label>
+              </div>
+            </fieldset>
+            <fieldset id=search-grotesq>
+              <legend class=col-form-label>血腥/恶心内容</legend>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-grotesq-no class=form-check-input name=grotesq value=n checked>
+                <label class=form-check-label for=search-grotesq-no>隐藏</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type=radio id=search-grotesq-yes class=form-check-input name=grotesq value=y>
+                <label class=form-check-label for=search-grotesq-yes>显示</label>
               </div>
             </fieldset>
           </div>
+        </div>
+o
+        <div class=d-flex>
+          <button id=search-submit class="btn btn-primary flex-fill">随机小马图！</button>
         </div>
       </form>
     </section>

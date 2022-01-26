@@ -164,7 +164,7 @@ function renderResults(json) {
         let cxt = canvasEl.getContext("2d")
         imgEl.parentElement.prepend(canvasEl)
         imgEl.classList.add("visually-hidden")
-        imgEl.once("load", () => {
+        once(imgEl, "load", () => {
           if (!imgEl.currentSrc) return false
           canvasEl.width = imgEl.naturalWidth
           canvasEl.height = imgEl.naturalHeight

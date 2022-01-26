@@ -57,12 +57,12 @@
 
     <section id=browse hidden>
       <h2>浏览</h2>
-      <div id=browse-images></div>
+      <div id=browse-results></div>
       <hr>
     </section>
 
     <section id=search>
-      <form>
+      <form id=search-form>
         <ul class="nav nav-tabs" id=search-tabs role=tablist>
           <li class=nav-item role=presentation>
             <button type=button id=search-tab-foo class="nav-link active" role=tab
@@ -133,7 +133,7 @@
             </fieldset>
           </div>
         </div>
-o
+
         <div class=d-flex>
           <button id=search-submit class="btn btn-primary flex-fill">随机小马图！</button>
         </div>
@@ -154,6 +154,21 @@ o
       </section>
     </div>
   </footer>
+
+  <div id=loading-modal class="modal fade" tabindex=-1 aria-hidden=true
+    data-bs-backdrop=static data-bs-keyboard=false
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class=modal-content>
+        <div class=modal-body>
+          <div class="d-flex justify-content-center align-items-center" role=status>
+            <div class=spinner-border aria-hidden=true></div>
+            <div class="p-2">加载中…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <template id=result-template>
     <article class="result card">
@@ -201,6 +216,11 @@ o
     </section>
   </template>
 
+  <template id=result-empty-template>
+    <p class="text-muted text-center"
+      >没有找到符合条件的图片呢qaq</p>
+  </template>
+
   <template id=tag-template>
     <span class="tag badge text-dark bg-light border">
       <ruby>
@@ -208,14 +228,6 @@ o
         <rp>(<rt class=tag-name>unknown tag<rp>)
       </ruby>
     </span>
-  </template>
-
-  <template id=loading-template>
-    <div class=text-center>
-      <div class=spinner-border role=status>
-        <span class=visually-hidden>加载中…</span>
-      </div>
-    </div>
   </template>
 
   <template id=button-spinner-template>

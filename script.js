@@ -20,6 +20,9 @@ function cloneTemplate(id) {
 /**
  * Handle an event only once.
  *
+ * Return `false` in `handler` to pretend the event did not occur and wait for
+ * another event before removing the handler.
+ *
  * @param {EventTarget} target
  * @param {string} name
  * @param {((event: Event) => any)} handler
@@ -27,25 +30,62 @@ function cloneTemplate(id) {
  */
 function once(target, name, handler, options) {
   var f = function (event) {
-    target.removeEventListener(name, f, options)
-    handler.call(this, event)
+    let returnValue
+    try {
+      returnValue = handler.call(this, event)
+    } finally {
+      if (returnValue !== false) target.removeEventListener(name, f, options)
+    }
   }
   target.addEventListener(name, f, options)
 }
 
-$$$("search-submit").addEventListener("click", async function (event) {
+////////////////////////////////////////////////////////////////////////////////
+
+const mainEl = $$$("main"),
+  introEl = $$$("intro"),
+  browseEl = $$$("browse"),
+  browseResultsEl = $$$("browse-results"),
+  formEl = $$$("search-form"),
+  loadingModal = bootstrap.Modal.getOrCreateInstance($$$("loading-modal"))
+
+$$$("search-submit").addEventListener("click", function (event) {
   event.preventDefault()
-  var data = [...new FormData(this.form)]
+  roll()
+})
+
+async function roll() {
+  var data = [...new FormData(formEl)]
   let queryParts = data.map(e => e.map(s => encodeURIComponent(s)).join("="))
   var query = "?" + queryParts.join("&")
 
+  loadingModal.show()
   try {
-    await search(query)
+    let results = await sendRequest(query)
+    renderResults(results)
   } catch (err) {
     alert("获取图片出错：" + err)
     throw err
+  } finally {
+    loadingModal.hide()
+    browseEl.scrollIntoView()
   }
-})
+}
+
+/**
+ * @param {string} query
+ * @returns {string} json
+ * @throws on load error
+ */
+function sendRequest(query) {
+  var xhr = new XMLHttpRequest()
+  xhr.open("get", "api.php" + query)
+  return new Promise((res, rej) => {
+    once(xhr, "load", () => res(xhr.responseText))
+    once(xhr, "error", ev => rej(ev.error || ev.message))
+    xhr.send()
+  })
+}
 
 /** @type {{ [tagName: string]: string }} */
 const TAG_TRANSL = {
@@ -77,51 +117,23 @@ const IMG_SIZE_KEYWORD = "medium",
   IMG_MAX_WIDTH = 800,
   IMG_MAX_HEIGHT = 600
 
-/** @param {string} query */
-async function search(query) {
-  $$$("intro").hidden = true
-  $$$("browse").hidden = false
-  var containerEl = $$$("browse-images")
-  document.body.scrollIntoView()
-  // containerEl.classList.add("loading")
-  // containerEl.setAttribute("aria-hidden", "true")
-  containerEl.textContent = ""
-  containerEl.appendChild(cloneTemplate("loading"))
+const EXCLUDE_SOURCES = ["derpibooru.org", "derpicdn.net"]
 
-  var xhr = new XMLHttpRequest()
-  xhr.open("get", "api.php" + query)
-  await new Promise((res, rej) => {
-    once(xhr, "load", () => res())
-    once(xhr, "error", ev => rej(ev.error || ev.message))
-    xhr.send()
-  })
-
-  containerEl.classList.remove("loading")
-  containerEl.removeAttribute("aria-hidden")
-  containerEl.textContent = ""
-  var response = JSON.parse(xhr.responseText)
+function renderResults(json) {
+  introEl.hidden = true
+  browseEl.hidden = false
+  browseResultsEl.textContent = ""
+  var response = JSON.parse(json)
+  if (!(response.images && response.images.length)) {
+    browseResultsEl.append(cloneTemplate("result-empty"))
+    return
+  }
   for (let result of response.images) {
-    // calculate size of image preview
-    let { width, height } = result
-    if (width >= height) {
-      if (width > IMG_MAX_WIDTH) {
-        height *= IMG_MAX_WIDTH / width
-        height = Math.round(height)
-        width = IMG_MAX_WIDTH
-      }
-    } else {
-      if (height > IMG_MAX_HEIGHT) {
-        width *= IMG_MAX_HEIGHT / height
-        width = Math.round(width)
-        height = IMG_MAX_HEIGHT
-      }
-    }
-
     let resultEl = cloneTemplate("result")
 
     let imgEl = resultEl.querySelector("img")
-    imgEl.width = width
-    imgEl.height = height
+    imgEl.width = result.width
+    imgEl.height = result.height
     let imgUrl = result.representations[IMG_SIZE_KEYWORD]
 
     if (result.spoilered) {
@@ -142,20 +154,22 @@ async function search(query) {
 
       /** @type {HTMLCanvasElement?} */
       let canvasEl = null
-      if (result.tags.includes("animated")) {
+      if (result.animated) {
+        // draw animated image on a canvas to prevent it from animating
         canvasEl = document.createElement("canvas")
-        canvasEl.width = width
-        canvasEl.height = height
+        canvasEl.width = result.width
+        canvasEl.height = result.height
         canvasEl.className = imgEl.className
         canvasEl.role = "presentation"
         let cxt = canvasEl.getContext("2d")
         imgEl.parentElement.prepend(canvasEl)
         imgEl.classList.add("visually-hidden")
-        imgEl.onload = () => {
-          if (!imgEl.currentSrc) return
-          imgEl.onload = null
-          cxt.drawImage(imgEl, 0, 0, width, height)
-        }
+        imgEl.once("load", () => {
+          if (!imgEl.currentSrc) return false
+          canvasEl.width = imgEl.naturalWidth
+          canvasEl.height = imgEl.naturalHeight
+          cxt.drawImage(imgEl, 0, 0)
+        })
       }
 
       let buttonEl = overlayEl.querySelector(".result-spoilered-button")
@@ -173,7 +187,8 @@ async function search(query) {
       resultEl.querySelector(".card-img-top").append(overlayEl)
     }
 
-    { // details
+    {
+      // details
       let detailsBtnEl = resultEl.querySelector(".result-details-button")
       once(detailsBtnEl, "click", () => {
         let detailsEl = cloneTemplate("result-details")
@@ -194,45 +209,42 @@ async function search(query) {
           imgEl.src = result.representations["full"]
         })
 
-        { // artist
-          let artists = [], editors = [], photographers = []
-          for (let tag of result.tags) {
-            if (tag === "artist needed")
-              artists.push("佚名")
-            else if (tag === "photographer needed")
-              photographers.push("佚名")
-            else if (tag.startsWith("artist:") && !tag.endsWith(" edits"))
-              artists.push(tag.slice(7))
-            else if (tag.startsWith("editor:"))
-              editors.push(tag.slice(7))
-            else if (tag.startsWith("photographer:"))
-              photographers.push(tag.slice(13))
-          }
-
-          let artistsStr = artists.join("、") || "–"
-          let parens = []
-          if (photographers.length) parens.push(`${photographers.join("、")} 拍摄`)
-          if (editors.length) parens.push(`${editors.join("、")} 改图`)
-          else if (result.tags.includes("edit")) parens.push("图有改动")
-          if (parens.length) artistsStr += ` (${parens.join("，")})`
-
-          detailsEl.querySelector(".result-details-artist").textContent = artistsStr
+        // artist
+        let artists = [],
+          editors = [],
+          photographers = []
+        for (let tag of result.tags) {
+          if (tag === "artist needed") artists.push("佚名")
+          else if (tag === "photographer needed") photographers.push("佚名")
+          else if (tag.startsWith("artist:") && !tag.endsWith(" edits"))
+            artists.push(tag.slice(7))
+          else if (tag.startsWith("editor:")) editors.push(tag.slice(7))
+          else if (tag.startsWith("photographer:"))
+            photographers.push(tag.slice(13))
         }
 
-        { // links
-          let booruLinkEl = detailsEl.querySelector(".result-details-boorulink"),
-            srcEl = detailsEl.querySelector(".result-details-src")
-          booruLinkEl.href = `https://derpibooru.org/images/${result.id}`
+        let str = artists.join("、") || "–"
+        let parens = []
+        if (photographers.length)
+          parens.push(`${photographers.join("、")} 拍摄`)
+        if (editors.length) parens.push(`${editors.join("、")} 改图`)
+        else if (result.tags.includes("edit")) parens.push("图有改动")
+        if (parens.length) str += ` (${parens.join("，")})`
 
-          let host = ""
-          if (result.source_url)
-            host = new URL(result.source_url).hostname
-          if (host && host !== "derpibooru.org") {
-            srcEl.querySelector("a").href = result.source_url
-            srcEl.querySelector("small").textContent = `(${host})`
-          } else {
-            srcEl.remove()
-          }
+        detailsEl.querySelector(".result-details-artist").textContent = str
+
+        // links
+        let booruLinkEl = detailsEl.querySelector(".result-details-boorulink"),
+          srcEl = detailsEl.querySelector(".result-details-src")
+        booruLinkEl.href = `https://derpibooru.org/images/${result.id}`
+
+        let host = ""
+        if (result.source_url) host = new URL(result.source_url).hostname
+        if (host && !EXCLUDE_SOURCES.includes(host)) {
+          srcEl.querySelector("a").href = result.source_url
+          srcEl.querySelector("small").textContent = `(${host})`
+        } else {
+          srcEl.remove()
         }
 
         resultEl.replaceChild(detailsEl, detailsBtnEl)
@@ -240,6 +252,6 @@ async function search(query) {
     }
 
     imgEl.src = imgUrl
-    containerEl.appendChild(resultEl)
+    browseResultsEl.appendChild(resultEl)
   }
 }

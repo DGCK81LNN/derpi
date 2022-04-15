@@ -216,8 +216,8 @@ function renderResults(json) {
         for (let tag of result.tags) {
           if (tag === "artist needed") artists.push("佚名")
           else if (tag === "photographer needed") photographers.push("佚名")
-          else if (tag.startsWith("artist:") && !tag.endsWith(" edits"))
-            artists.push(tag.slice(7))
+          else if (tag.startsWith("artist:"))
+            artists.push(tag.slice(7).replace(/ edit[s]?$/, ""))
           else if (tag.startsWith("editor:")) editors.push(tag.slice(7))
           else if (tag.startsWith("photographer:"))
             photographers.push(tag.slice(13))

@@ -138,7 +138,7 @@ function renderResults(json) {
 
     if (result.spoilered) {
       resultEl.classList.add("result-spoilered")
-      resultEl.ariaHidden = true
+      imgEl.ariaHidden = true
 
       let overlayEl = cloneTemplate("result-spoiler")
 

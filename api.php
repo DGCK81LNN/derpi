@@ -1,7 +1,7 @@
 <?php
 define('APP_ROOT', __DIR__);
 
-if ($_COOKIE['lnndebug']) {
+if (isset($_COOKIE['lnndebug'])) {
   error_reporting(E_ALL);
   ini_set('log_errors', '1');
   ini_set('error_log', APP_ROOT . '/debug.log');
